@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lazy</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- JQuery and JQuery UI Libraries -->
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+
+        <!-- JQuery UI Styles -->
+        <link href="css/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet" type="text/css"/>
+
+        <!-- A few page styles -->
+        <style type="text/css" media="screen">
+
+            body {
+                overflow: hidden;
+            }
+
+            #editor {
+                margin: 0;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+/*                width:800px;
+                height: 600px;
+                border: 1px solid gray;*/
+            }
+
+            #dialog-link {
+                padding: .4em 1em .4em 20px;
+                text-decoration: none;
+                position: relative;
+            }
+
+            #dialog-link span.ui-icon {
+                margin: 0 5px 0 0;
+                position: absolute;
+                left: .2em;
+                top: 50%;
+                margin-top: -8px;
+            }
+
+            .ui-dialog-titlebar, .ui-widget-header{ background-color: #00979d; color: white; }
+
+            .code-button { background-color: #E8E7E6; border: 1px solid #CCC; padding: 2px; margin: 1px; cursor: default; }
+
+        </style>
+
+        <script src="ace/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+
+
+    </head>
+    <body>
+        <div>content...</div>
+
+        <!-- Ace Editor example -->
+        <pre id="editor">function foo(items) {
+    var i;
+    for (i = 0; i &lt; items.length; i++) {
+        alert("Ace Rocks " + items[i]);
+    }
+}</pre>
+
+        <div id="dialog" title="Lazy" style="padding: 0;">
+            <div class="info">Double click the items below to print the code block</div>
+            <div class="code-button" id="btnFOR">
+                FOR LOOP
+            </div>
+            <div class="code-button" id="btnIF">
+                IF CONDITION
+            </div>
+            <div class="code-button" id="btnIFTE">
+                IF - ELSE IF CONDITION
+            </div>
+            <div class="code-button" id="btnWHILE">
+                WHILE LOOP
+            </div>
+        </div>
+
+
+
+        <script type="text/javascript">
+            
+            var myTabSize = 4,
+                arrayOfBarspace = [],
+                editor = ace.edit("editor");
+        
+            editor.setTheme("ace/theme/chrome"),
+            editor.session.setMode("ace/mode/javascript");
+            editor.session.setTabSize(myTabSize);
+            
+            for (var i = 0; i < myTabSize; i++) {
+                arrayOfBarspace.push(' ');
+            }
+            
+        </script>
+
+        <!-- "Lazy" or "Pigro" (lazy in italian) script  -->
+        <script type="text/javascript">
+
+            function writeCodeBlock(codeBlock) {
+
+                if (editor) {
+
+                    var txt = "";
+
+                    // The variable 'clmNumber' gets the current cursor column 
+                    // in the editor to correctly start printing the code block 
+                    // at the right position in case of nested blocks.
+                    // Check the js for loop in the following code.
+                    var clmNumber = editor.getCursorPosition().column;
+
+                    // *** Bear in mind that, in this case, using tab '\t' 
+                    // instead of ' ' space caused strange behaviour in order 
+                    // to get the correct cursor position. 
+                    // I don't know if it is an issue of the editor.
+                    // So that I used the 'arrayOfBarspace' join technique.
+
+                    if (codeBlock === 'btnFOR') {
+                        txt = "for (n = 0; n < 3; n++) {\n";
+                        for (var counter = 0; counter < clmNumber; counter++) {
+                            txt += " ";
+                        }
+                        txt += arrayOfBarspace.join("") + "//your code here\n";      // ***
+                        for (var counter = 0; counter < clmNumber; counter++) {
+                            txt += " ";
+                        }
+                        txt += "}\n";
+                    } else if (codeBlock === 'btnIF') {
+                        txt = "if (a == 1) {\n";
+                        for (var counter = 0; counter < clmNumber; counter++) {
+                            txt += " ";
+                        }
+                        txt += arrayOfBarspace.join("") + "//your code here\n";
+                        for (var counter = 0; counter < clmNumber; counter++) {
+                            txt += " ";
+                        }
+                        txt += "}\n";
+                    } else if (codeBlock === 'btnIFTE') {
+                        txt = "if (a == 1) { \t\n";
+                        for (var counter = 0; counter < clmNumber; counter++) {
+                            txt += " ";
+                        }
+                        txt += arrayOfBarspace.join("") + "//your code here\n";
+                        for (var counter = 0; counter < clmNumber; counter++) {
+                            txt += " ";
+                        }
+                        txt += "} else if(a == 2) { \t\n";
+                        for (var counter = 0; counter < clmNumber; counter++) {
+                            txt += " ";
+                        }
+                        txt += arrayOfBarspace.join("") + "//your code here\n";
+                        for (var counter = 0; counter < clmNumber; counter++) {
+                            txt += " ";
+                        }
+                        txt += "}";
+                    } else if (codeBlock === 'btnWHILE') {
+                        txt = "while (1 == 1) { \t\n";
+                        for (var counter = 0; counter < clmNumber; counter++) {
+                            txt += " ";
+                        }
+                        txt += arrayOfBarspace.join("") + "//your code here\n";
+                        for (var counter = 0; counter < clmNumber; counter++) {
+                            txt += " ";
+                        }
+                        txt += "}";
+                    }
+
+                    // ... other code snippets (for example Arduino API)
+
+                    // ... further usefull implementations
+
+                    editor.insert(txt);
+                    editor.focus();
+                }
+            }
+
+            $(function () {
+                // it initializes the popup
+                $("#dialog").dialog({position: {my: "right top", at: "right top"}});
+
+                // it writes the code block at the item double click
+                // passing the id of the div to detect what to write
+                $(".code-button").on('dblclick', function () {
+                    writeCodeBlock($(this).attr('id'));
+                });
+            });
+
+        </script>
+    </body>
+</html>
